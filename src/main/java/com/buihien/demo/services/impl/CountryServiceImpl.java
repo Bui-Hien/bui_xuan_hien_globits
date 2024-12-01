@@ -37,7 +37,7 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<CountryResponse> getAllCountries() {
+    public List<CountryResponse> getAllCountry() {
         List<Country> countries = countryRepository.findAll();
         return countries.stream()
                 .map(this::toCountryResponse).collect(Collectors.toList());

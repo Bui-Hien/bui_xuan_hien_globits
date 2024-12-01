@@ -10,7 +10,7 @@ public interface CountryService {
 
     long updateCountry(long id, CountryRequest countryRequest);
 
-    List<CountryResponse> getAllCountries();
+    List<CountryResponse> getAllCountry();
 
     CountryResponse getCountryById(long id);
 

@@ -1,10 +1,12 @@
 package com.buihien.demo.controller;
 
 import com.buihien.demo.dto.request.CountryRequest;
+import com.buihien.demo.dto.request.UserRequest;
 import com.buihien.demo.dto.response.generic.ResponseData;
 import com.buihien.demo.dto.response.generic.ResponseError;
 import com.buihien.demo.exception.ResourceNotFoundException;
 import com.buihien.demo.services.CountryService;
+import com.buihien.demo.services.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -14,64 +16,64 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/country")
+@RequestMapping("/api/v1/user")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
-public class CountryController {
-    private final CountryService countryService;
+public class UserController {
+    private final UserService userService;
 
     @PostMapping("/")
-    public ResponseData<?> addCountry(@Valid @RequestBody CountryRequest countryRequest) {
-        log.info("Request add country {}", countryRequest);
+    public ResponseData<?> addUser(@Valid @RequestBody UserRequest userRequest) {
+        log.info("Request add country {}", userRequest);
 
         try {
-            long id = countryService.saveCountry(countryRequest);
-            return new ResponseData<>(HttpStatus.CREATED.value(), "Country add success", id);
+            long id = userService.saveUser(userRequest);
+            return new ResponseData<>(HttpStatus.CREATED.value(), "User add success", id);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseData<>(HttpStatus.CONFLICT.value(), e.getMessage());
+        } catch (Exception e) {
+            log.error("errorMessage={}", e.getMessage(), e.getCause());
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Add user fail");
+        }
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseData<?> updateUser(@PathVariable @Min(1) long userId, @Valid @RequestBody UserRequest userRequest) {
+        log.info("Request update user Id={}", userId);
+
+        try {
+            userService.updateUser(userId, userRequest);
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User update success");
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
             log.error("errorMessage={}", e.getMessage(), e.getCause());
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Add country fail");
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Update user fail");
         }
     }
 
-    @PutMapping("/{countryId}")
-    public ResponseData<?> editCountry(@PathVariable @Min(1) long countryId, @Valid @RequestBody CountryRequest countryRequest) {
-        log.info("Request update country Id={}", countryId);
+
+    @DeleteMapping("/{userId}")
+    public ResponseData<?> deleteUser(@PathVariable @Min(value = 1, message = "Id user must be greater than 0") long userId) {
+        log.info("Request delete userId={}", userId);
 
         try {
-            countryService.updateCountry(countryId, countryRequest);
-            return new ResponseData<>(HttpStatus.ACCEPTED.value(), "Country update success");
+            userService.deleteUserById(userId);
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "User delete success");
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
             log.error("errorMessage={}", e.getMessage(), e.getCause());
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Update country fail");
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Delete user fail");
         }
     }
 
-
-    @DeleteMapping("/{countryId}")
-    public ResponseData<?> deleteCountry(@PathVariable @Min(value = 1, message = "countryId must be greater than 0") long countryId) {
-        log.info("Request delete countryId={}", countryId);
-
+    @GetMapping("/{userId}")
+    public ResponseData<?> getCountry(@PathVariable @Min(value = 1, message = "Id user must be greater than 0") long userId) {
+        log.info("Request get user by id={}", userId);
         try {
-            countryService.deleteCountryById(countryId);
-            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Country delete success");
-        } catch (ResourceNotFoundException e) {
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        } catch (Exception e) {
-            log.error("errorMessage={}", e.getMessage(), e.getCause());
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Delete country fail");
-        }
-    }
-
-    @GetMapping("/{countryId}")
-    public ResponseData<?> getCountry(@PathVariable @Min(value = 1, message = "countryId must be greater than 0") long countryId) {
-        log.info("Request get country by id={}", countryId);
-        try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get country", countryService.getCountryById(countryId));
+            return new ResponseData<>(HttpStatus.OK.value(), "Get user", userService.getUserById(userId));
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
@@ -80,11 +82,11 @@ public class CountryController {
         }
     }
 
-    @GetMapping("/allCountry")
+    @GetMapping("/allUser")
     public ResponseData<?> getAllCountry() {
-        log.info("Request get all country");
+        log.info("Request get all user");
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get all country", countryService.getAllCountry());
+            return new ResponseData<>(HttpStatus.OK.value(), "Get all user", userService.getAllUser());
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
