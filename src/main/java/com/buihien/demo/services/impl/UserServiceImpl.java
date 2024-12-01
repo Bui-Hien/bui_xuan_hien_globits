@@ -1,22 +1,19 @@
 package com.buihien.demo.services.impl;
 
-import com.buihien.demo.dto.request.CountryRequest;
 import com.buihien.demo.dto.request.UserRequest;
-import com.buihien.demo.dto.response.CountryResponse;
-import com.buihien.demo.entities.Country;
 import com.buihien.demo.entities.Person;
 import com.buihien.demo.entities.User;
 import com.buihien.demo.exception.ResourceNotFoundException;
-import com.buihien.demo.repository.CountryRepository;
-import com.buihien.demo.repository.PersonRepository;
 import com.buihien.demo.repository.UserRepository;
-import com.buihien.demo.services.CountryService;
+import com.buihien.demo.services.CompanyService;
+import com.buihien.demo.services.PersonService;
 import com.buihien.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,17 +21,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final PersonRepository personRepository;
+    private final PersonService personService;
+    private final CompanyService companyService;
 
     @Override
     public long saveUser(UserRequest userRequest) {
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             throw new ResourceNotFoundException("Email already exists.");
         }
-        if (personRepository.existsByPhoneNumber(userRequest.getPerson().getPhoneNumber())) {
+        if (personService.existsByPhoneNumber(userRequest.getPerson().getPhoneNumber())) {
             throw new ResourceNotFoundException("Phone number already exists.");
         }
+        var company = companyService.getCompanyById(userRequest.getPerson().getCompanyId());
+
         User user = toUserEntity(userRequest);
+        user.getPerson().setCompany(company);
         userRepository.save(user);
         return user.getId();
     }
@@ -54,6 +55,16 @@ public class UserServiceImpl implements UserService {
         person.setBirthdate(userRequest.getPerson().getBirthdate());
         person.setAddress(userRequest.getPerson().getAddress());
 
+        if (!personService.existsByPhoneNumber(userRequest.getPerson().getPhoneNumber())
+                && !Objects.equals(userRequest.getPerson().getPhoneNumber(), user.getPerson().getPhoneNumber())
+        ) {
+            person.setPhoneNumber(userRequest.getPerson().getPhoneNumber());
+        }
+
+        var company = companyService.getCompanyById(userRequest.getPerson().getCompanyId());
+
+        person.setCompany(company);
+
         user.setPerson(person);
         userRepository.save(user);
         return user.getId();
@@ -71,6 +82,7 @@ public class UserServiceImpl implements UserService {
                             .birthdate(user.getPerson().getBirthdate())
                             .phoneNumber(user.getPerson().getPhoneNumber())
                             .address(user.getPerson().getAddress())
+                            .company(user.getPerson().getCompany())
                             .build();
 
                     user.setPerson(person);
@@ -90,6 +102,7 @@ public class UserServiceImpl implements UserService {
                     .birthdate(user.getPerson().getBirthdate())
                     .phoneNumber(user.getPerson().getPhoneNumber())
                     .address(user.getPerson().getAddress())
+                    .company(user.getPerson().getCompany())
                     .build());
         }
         return user;
