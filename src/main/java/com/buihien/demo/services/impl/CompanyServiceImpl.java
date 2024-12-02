@@ -2,8 +2,10 @@ package com.buihien.demo.services.impl;
 
 import com.buihien.demo.dto.request.CompanyRequest;
 import com.buihien.demo.dto.response.CompanyResponse;
+import com.buihien.demo.dto.response.DepartmentResponse;
 import com.buihien.demo.dto.response.PersonResponse;
 import com.buihien.demo.entities.Company;
+import com.buihien.demo.entities.Department;
 import com.buihien.demo.exception.ResourceNotFoundException;
 import com.buihien.demo.repository.CompanyRepository;
 import com.buihien.demo.services.CompanyService;
@@ -19,8 +21,20 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public long saveCompany(CompanyRequest countryRequest) {
-        var company = toCompanyEntity(countryRequest);
+    public long saveCompany(CompanyRequest companyRequest) {
+        var company = toCompanyEntity(companyRequest);
+        company.setDepartments(
+                companyRequest.getDepartment()
+                        .stream()
+                        .map(department -> {
+                            return Department.builder()
+                                    .code(department.getCode())
+                                    .name(department.getName())
+                                    .parent(department.getParent())
+                                    .build();
+                        }).collect(Collectors.toSet())
+        );
+
         companyRepository.save(company);
         return company.getId();
     }
@@ -32,6 +46,19 @@ public class CompanyServiceImpl implements CompanyService {
         company.setName(companyRequest.getName());
         company.setAddress(companyRequest.getAddress());
         company.setCode(companyRequest.getCode());
+
+        company.setDepartments(
+                companyRequest.getDepartment()
+                        .stream()
+                        .map(department -> {
+                            return Department.builder()
+                                    .code(department.getCode())
+                                    .name(department.getName())
+                                    .parent(department.getParent())
+                                    .build();
+                        }).collect(Collectors.toSet())
+        );
+
         companyRepository.save(company);
         return company.getId();
     }
@@ -52,7 +79,16 @@ public class CompanyServiceImpl implements CompanyService {
                                         .birthdate(person.getBirthdate())
                                         .idCompany(null)
                                         .build()
-                                ).collect(Collectors.toList()))  // Collect lại danh sách các PersonResponse
+                                ).collect(Collectors.toSet()))
+                        .departments(company.getDepartments()
+                                .stream().map(department ->
+                                        DepartmentResponse.builder()
+                                                .id(department.getId())
+                                                .name(department.getName())
+                                                .code(department.getCode())
+                                                .build())
+                                .collect(Collectors.toSet())
+                        )
                         .build())  // Trả về đối tượng CompanyResponse
                 .collect(Collectors.toList());
     }
@@ -75,7 +111,15 @@ public class CompanyServiceImpl implements CompanyService {
                                 .birthdate(person.getBirthdate())
                                 .idCompany(null)
                                 .build()
-                        ).collect(Collectors.toList()))
+                        ).collect(Collectors.toSet()))
+                .departments(company.getDepartments()
+                        .stream().map(department ->
+                                DepartmentResponse.builder()
+                                        .id(department.getId())
+                                        .name(department.getName())
+                                        .code(department.getCode())
+                                        .build())
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

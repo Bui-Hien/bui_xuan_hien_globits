@@ -1,11 +1,10 @@
 package com.buihien.demo.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,5 +23,8 @@ public class Company {
     private String address;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private List<Person> persons ;
+    private Set<Person> persons;
+
+    @OneToMany(mappedBy = "company")
+    private Set<Department> departments;
 }

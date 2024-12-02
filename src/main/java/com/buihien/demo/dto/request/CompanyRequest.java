@@ -1,11 +1,12 @@
 package com.buihien.demo.dto.request;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.io.Serializable;
-
+import java.util.Set;
 
 
 @Getter
@@ -22,4 +23,7 @@ public class CompanyRequest implements Serializable {
     private String code;
     @NotBlank(message = "code not blank")
     private String address;
+
+    @Valid
+    private Set<DepartmentRequest> department;
 }

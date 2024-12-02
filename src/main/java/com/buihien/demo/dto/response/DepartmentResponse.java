@@ -9,11 +9,9 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyResponse {
+public class DepartmentResponse {
     private Long id;
     private String name;
     private String code;
-    private String address;
-    private Set<PersonResponse> persons;
-    private Set<DepartmentResponse> departments;
+    private CompanyResponse company;
 }
