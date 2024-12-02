@@ -3,6 +3,8 @@ package com.buihien.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -27,5 +29,8 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
+
+    @ManyToMany(mappedBy = "users")
+    Set<Role> roles;
 
 }

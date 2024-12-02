@@ -1,6 +1,7 @@
 package com.buihien.demo.dto.response.generic;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class ResponseData<T> {
     private final int status;
@@ -15,6 +16,7 @@ public class ResponseData<T> {
      * @param message
      * @param data
      */
+
     public ResponseData(int status, String message, T data) {
         this.status = status;
         this.message = message;

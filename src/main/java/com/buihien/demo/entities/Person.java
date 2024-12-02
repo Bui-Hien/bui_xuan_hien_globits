@@ -32,7 +32,6 @@ public class Person {
 
     @Column(name = "address")
     private String address;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private User user;
 
@@ -40,11 +39,4 @@ public class Person {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    public Person(String fullName, String gender, LocalDate birthdate, String phoneNumber, String address) {
-        this.fullName = fullName;
-        this.gender = gender;
-        this.birthdate = birthdate;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
 }

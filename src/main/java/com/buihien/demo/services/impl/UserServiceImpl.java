@@ -1,6 +1,9 @@
 package com.buihien.demo.services.impl;
 
 import com.buihien.demo.dto.request.UserRequest;
+import com.buihien.demo.dto.response.PersonResponse;
+import com.buihien.demo.dto.response.UserResponse;
+import com.buihien.demo.entities.Company;
 import com.buihien.demo.entities.Person;
 import com.buihien.demo.entities.User;
 import com.buihien.demo.exception.ResourceNotFoundException;
@@ -35,7 +38,12 @@ public class UserServiceImpl implements UserService {
         var company = companyService.getCompanyById(userRequest.getPerson().getCompanyId());
 
         User user = toUserEntity(userRequest);
-        user.getPerson().setCompany(company);
+        user.getPerson().setCompany(Company.builder()
+                .id(company.getId())
+                .name(company.getName())
+                .code(company.getCode())
+                .address(company.getAddress())
+                .build());
         userRepository.save(user);
         return user.getId();
     }
@@ -63,7 +71,12 @@ public class UserServiceImpl implements UserService {
 
         var company = companyService.getCompanyById(userRequest.getPerson().getCompanyId());
 
-        person.setCompany(company);
+        person.setCompany(Company.builder()
+                .id(company.getId())
+                .name(company.getName())
+                .code(company.getCode())
+                .address(company.getAddress())
+                .build());
 
         user.setPerson(person);
         userRepository.save(user);
@@ -71,41 +84,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<UserResponse> getAllUser() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .peek(user -> {
-                    Person person = Person.builder()
-                            .id(user.getPerson().getId())
-                            .fullName(user.getPerson().getFullName())
-                            .gender(user.getPerson().getGender())
-                            .birthdate(user.getPerson().getBirthdate())
-                            .phoneNumber(user.getPerson().getPhoneNumber())
-                            .address(user.getPerson().getAddress())
-                            .company(user.getPerson().getCompany())
-                            .build();
-
-                    user.setPerson(person);
-                }).collect(Collectors.toList());
+                .map(user -> UserResponse.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .password(user.getPassword())
+                        .isActive(user.getIsActive())
+                        .person(PersonResponse.builder()
+                                .id(user.getPerson().getId())
+                                .fullName(user.getPerson().getFullName())
+                                .gender(user.getPerson().getGender())
+                                .birthdate(user.getPerson().getBirthdate())
+                                .idCompany(user.getPerson().getCompany().getId())
+                                .build())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User getUserById(long id) {
+    public UserResponse getUserById(long id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + id));
-        Person person = user.getPerson();
-        if (person != null) {
-            user.setPerson(Person.builder()
-                    .id(user.getPerson().getId())
-                    .fullName(user.getPerson().getFullName())
-                    .gender(user.getPerson().getGender())
-                    .birthdate(user.getPerson().getBirthdate())
-                    .phoneNumber(user.getPerson().getPhoneNumber())
-                    .address(user.getPerson().getAddress())
-                    .company(user.getPerson().getCompany())
-                    .build());
-        }
-        return user;
+        return UserResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .isActive(user.getIsActive())
+                .person(PersonResponse.builder()
+                        .id(user.getPerson().getId())
+                        .fullName(user.getPerson().getFullName())
+                        .gender(user.getPerson().getGender())
+                        .birthdate(user.getPerson().getBirthdate())
+                        .idCompany(user.getPerson().getCompany().getId())
+                        .build())
+                .build();
     }
 
     @Override

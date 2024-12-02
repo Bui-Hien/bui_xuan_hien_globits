@@ -1,12 +1,10 @@
 package com.buihien.demo.controller;
 
 import com.buihien.demo.dto.request.CompanyRequest;
-import com.buihien.demo.dto.request.UserRequest;
 import com.buihien.demo.dto.response.generic.ResponseData;
 import com.buihien.demo.dto.response.generic.ResponseError;
 import com.buihien.demo.exception.ResourceNotFoundException;
 import com.buihien.demo.services.CompanyService;
-import com.buihien.demo.services.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping("/")
-    public ResponseData<?> addUser(@Valid @RequestBody CompanyRequest companyRequest) {
+    public ResponseData<?> addCompany(@Valid @RequestBody CompanyRequest companyRequest) {
         log.info("Request add country {}", companyRequest);
 
         try {
@@ -39,7 +37,7 @@ public class CompanyController {
     }
 
     @PutMapping("/{companyId}")
-    public ResponseData<?> updateUser(@PathVariable @Min(1) long companyId, @Valid @RequestBody CompanyRequest companyRequest) {
+    public ResponseData<?> updateCompany(@PathVariable @Min(1) long companyId, @Valid @RequestBody CompanyRequest companyRequest) {
         log.info("Request update company Id={}", companyId);
 
         try {
@@ -49,13 +47,13 @@ public class CompanyController {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
             log.error("errorMessage={}", e.getMessage(), e.getCause());
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Update user fail");
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Update Company fail");
         }
     }
 
 
     @DeleteMapping("/{companyId}")
-    public ResponseData<?> deleteUser(@PathVariable @Min(value = 1, message = "Id user must be greater than 0") long companyId) {
+    public ResponseData<?> deleteCompany(@PathVariable @Min(value = 1, message = "Id Company must be greater than 0") long companyId) {
         log.info("Request delete ucompanyId={}", companyId);
 
         try {
@@ -65,7 +63,7 @@ public class CompanyController {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
             log.error("errorMessage={}", e.getMessage(), e.getCause());
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Delete user fail");
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Delete Company fail");
         }
     }
 
@@ -86,7 +84,7 @@ public class CompanyController {
     public ResponseData<?> getAllCountry() {
         log.info("Request get all company");
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get all company", companyService.getAllCountry());
+            return new ResponseData<>(HttpStatus.OK.value(), "Get all company", companyService.getAllCompany());
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
