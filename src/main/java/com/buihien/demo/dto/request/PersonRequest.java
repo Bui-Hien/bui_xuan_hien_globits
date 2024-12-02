@@ -29,6 +29,6 @@ public class PersonRequest implements Serializable {
     @NotBlank(message = "Address cannot be blank")
     private String address;
 
-    @NotBlank(message = "Company id cannot be blank")
+    @NotNull(message = "Company id cannot be null")
     private long companyId;
 }

@@ -1,12 +1,12 @@
 package com.buihien.demo.dto.request;
 
-import com.buihien.demo.entities.Person;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,6 +25,11 @@ public class UserRequest implements Serializable {
     private Boolean isActive;
 
     @NotNull(message = "Person cannot be null")
+    @Valid
     private PersonRequest person;
+
+    @NotEmpty(message = "Role list cannot be empty")
+    @Valid
+    private Set<RoleIdRequest> roles;
 
 }
