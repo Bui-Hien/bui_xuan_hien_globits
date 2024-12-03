@@ -13,7 +13,9 @@ import lombok.*;
 public class DepartmentRequest {
     @NotBlank(message = "code not blank")
     private String code;
+
     @NotBlank(message = "code not blank")
     private String name;
+
     private Department parent;
 }

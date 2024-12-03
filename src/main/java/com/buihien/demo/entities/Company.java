@@ -4,6 +4,7 @@ package com.buihien.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -26,5 +27,5 @@ public class Company {
     private Set<Person> persons;
 
     @OneToMany(mappedBy = "company")
-    private Set<Department> departments;
+    private Set<Department> departments = new HashSet<>();
 }

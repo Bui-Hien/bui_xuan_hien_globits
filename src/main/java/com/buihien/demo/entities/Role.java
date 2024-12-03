@@ -20,6 +20,6 @@ public class Role {
     private String role;
     private String description;
     @ManyToMany(mappedBy = "roles")
-    Set<User> users;
+    Set<User> users = new HashSet<>();
 
 }

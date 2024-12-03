@@ -44,11 +44,8 @@ public class UserServiceImpl implements UserService {
         user.getPerson().setCompany(Company.builder()
                 .id(company.getId())
                 .build());
-        if (user.getRoles() == null) {
-            user.setRoles(new HashSet<>());
-        }
-        userRequest.getRoles().forEach(role -> {
-            var ruleRequest = roleService.getRoleById(role.getId());
+        userRequest.getRoles().forEach(roleId -> {
+            var ruleRequest = roleService.getRoleById(roleId);
             user.getRoles().add(
                     Role.builder()
                             .id(ruleRequest.getId())
@@ -66,8 +63,8 @@ public class UserServiceImpl implements UserService {
         user.setIsActive(userRequest.getIsActive());
 
 
-        userRequest.getRoles().forEach(role -> {
-            var ruleRequest = roleService.getRoleById(role.getId());
+        userRequest.getRoles().forEach(roleId -> {
+            var ruleRequest = roleService.getRoleById(roleId);
             user.getRoles().add(
                     Role.builder()
                             .id(ruleRequest.getId())

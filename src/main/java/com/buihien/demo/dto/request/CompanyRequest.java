@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -16,14 +17,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class CompanyRequest implements Serializable {
     @NotBlank(message = "code not blank")
-
     private String name;
-    @NotBlank(message = "code not blank")
 
+    @NotBlank(message = "code not blank")
     private String code;
+
     @NotBlank(message = "code not blank")
     private String address;
 
     @Valid
-    private Set<DepartmentRequest> department;
+    private Set<DepartmentRequest> department = new HashSet<>();
 }

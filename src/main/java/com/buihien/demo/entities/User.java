@@ -3,6 +3,7 @@ package com.buihien.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -35,6 +36,6 @@ public class User {
             name = "user_roles",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    Set<Role> roles;
+    Set<Role> roles = new HashSet<>();
 
 }

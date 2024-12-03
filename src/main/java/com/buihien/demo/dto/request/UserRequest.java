@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -28,8 +28,8 @@ public class UserRequest implements Serializable {
     @Valid
     private PersonRequest person;
 
-    @NotEmpty(message = "Role list cannot be empty")
-    @Valid
-    private Set<RoleIdRequest> roles;
+    @NotNull(message = "Role ID cannot be null")
+    @Min(value = 1, message = "Role ID must be greater than 0")
+    private Set<Long> roles = new HashSet<>();
 
 }

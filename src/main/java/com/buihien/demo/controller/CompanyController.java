@@ -92,4 +92,19 @@ public class CompanyController {
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
     }
+
+    @GetMapping("/allProjectWithPage")
+    public ResponseData<?> getAllCompanyWithPage(@RequestParam(defaultValue = "0", required = false) int pageNo,
+                                                 @Min(10) @RequestParam(defaultValue = "10", required = false) int pageSize
+    ) {
+        log.info("Request get all company with page");
+        try {
+            return new ResponseData<>(HttpStatus.OK.value(), "Get all company with page", companyService.getAllCompanyWithPage(pageNo, pageSize));
+        } catch (ResourceNotFoundException e) {
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        } catch (Exception e) {
+            log.error("errorMessage={}", e.getMessage(), e.getCause());
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        }
+    }
 }
