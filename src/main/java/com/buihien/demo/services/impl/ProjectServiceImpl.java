@@ -13,6 +13,7 @@ import com.buihien.demo.repository.ProjectRepository;
 import com.buihien.demo.services.CompanyService;
 import com.buihien.demo.services.PersonService;
 import com.buihien.demo.services.ProjectService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -144,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .id(person.getId())
                 .fullName(person.getFullName())
                 .gender(person.getGender())
-                .birthdate(person.getBirthdate())
+                .birthdate((Data) person.getBirthdate())
                 .build();
     }
 

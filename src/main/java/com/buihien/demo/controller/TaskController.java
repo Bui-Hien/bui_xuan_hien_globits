@@ -9,9 +9,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.ByteArrayInputStream;
 
 @RestController
 @RequestMapping("/api/v1/task")
@@ -68,7 +74,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public ResponseData<?> getCountry(@PathVariable @Min(value = 1, message = "Id Task must be greater than 0") long taskId) {
+    public ResponseData<?> getTask(@PathVariable @Min(value = 1, message = "Id Task must be greater than 0") long taskId) {
         log.info("Request get Task by id={}", taskId);
         try {
             return new ResponseData<>(HttpStatus.OK.value(), "Get Task", taskService.getTaskById(taskId));
@@ -81,7 +87,7 @@ public class TaskController {
     }
 
     @GetMapping("/allTask")
-    public ResponseData<?> getAllCountry() {
+    public ResponseData<?> getAllTask() {
         log.info("Request get all Task");
         try {
             return new ResponseData<>(HttpStatus.OK.value(), "Get all Task", taskService.getAllTask());
@@ -98,5 +104,29 @@ public class TaskController {
                                        @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize
     ) {
         return new ResponseData<>(HttpStatus.OK.value(), "allTaskWithPage", taskService.getAllTasksWithPage(pageNo, pageSize));
+    }
+
+    @GetMapping("/allTaskExcel")
+    public ResponseEntity<?> getAllTaskExportExcel() {
+        log.info("Request to export all tasks to Excel");
+        try {
+            ByteArrayInputStream excelFile = taskService.exportAllTasksToExcel();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=all_tasks.xlsx");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(new InputStreamResource(excelFile));
+        } catch (ResourceNotFoundException e) {
+            log.error("Resource not found: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error occurred: {}", e.getMessage(), e.getCause());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to export tasks to Excel"));
+        }
     }
 }

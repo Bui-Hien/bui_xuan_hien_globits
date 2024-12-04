@@ -13,6 +13,6 @@ public class PersonResponse {
     private Long id;
     private String fullName;
     private String gender;
-    private LocalDate birthdate;
+    private Data birthdate;
     private Long idCompany;
 }

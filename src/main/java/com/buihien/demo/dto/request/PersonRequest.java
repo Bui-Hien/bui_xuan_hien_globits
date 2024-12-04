@@ -21,7 +21,7 @@ public class PersonRequest implements Serializable {
     private String gender;
 
     @NotNull(message = "Birthdate cannot be null")
-    private LocalDate birthdate;
+    private Data birthdate;
 
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
     private String phoneNumber;

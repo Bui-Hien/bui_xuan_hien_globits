@@ -14,6 +14,7 @@ import com.buihien.demo.services.CompanyService;
 import com.buihien.demo.services.PersonService;
 import com.buihien.demo.services.RoleService;
 import com.buihien.demo.services.UserService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
         });
         user.getPerson().setFullName(userRequest.getPerson().getFullName());
         user.getPerson().setGender(userRequest.getPerson().getGender());
-        user.getPerson().setBirthdate(userRequest.getPerson().getBirthdate());
+        user.getPerson().setBirthdate((Date) userRequest.getPerson().getBirthdate());
         user.getPerson().setAddress(userRequest.getPerson().getAddress());
 
         if (!personService.existsByPhoneNumber(userRequest.getPerson().getPhoneNumber())
@@ -106,7 +107,7 @@ public class UserServiceImpl implements UserService {
                                 .id(user.getPerson().getId())
                                 .fullName(user.getPerson().getFullName())
                                 .gender(user.getPerson().getGender())
-                                .birthdate(user.getPerson().getBirthdate())
+                                .birthdate((Data) user.getPerson().getBirthdate())
                                 .idCompany(user.getPerson().getCompany().getId())
                                 .build())
                         .build())
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
                         .id(user.getPerson().getId())
                         .fullName(user.getPerson().getFullName())
                         .gender(user.getPerson().getGender())
-                        .birthdate(user.getPerson().getBirthdate())
+                        .birthdate((Data) user.getPerson().getBirthdate())
                         .idCompany(user.getPerson().getCompany().getId())
                         .build())
                 .roles(user.getRoles()
@@ -162,7 +163,7 @@ public class UserServiceImpl implements UserService {
                         Person.builder()
                                 .fullName(userRequest.getPerson().getFullName())
                                 .gender(userRequest.getPerson().getGender())
-                                .birthdate(userRequest.getPerson().getBirthdate())
+                                .birthdate((Date) userRequest.getPerson().getBirthdate())
                                 .phoneNumber(userRequest.getPerson().getPhoneNumber())
                                 .address(userRequest.getPerson().getAddress())
                                 .build()

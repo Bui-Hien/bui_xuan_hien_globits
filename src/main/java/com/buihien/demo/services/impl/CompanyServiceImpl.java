@@ -11,6 +11,7 @@ import com.buihien.demo.entities.Person;
 import com.buihien.demo.exception.ResourceNotFoundException;
 import com.buihien.demo.repository.CompanyRepository;
 import com.buihien.demo.services.CompanyService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -91,7 +92,7 @@ public class CompanyServiceImpl implements CompanyService {
                                 .id(person.getId())
                                 .fullName(person.getFullName())
                                 .gender(person.getGender())
-                                .birthdate(person.getBirthdate())
+                                .birthdate((Data) person.getBirthdate())
                                 .idCompany(null)
                                 .build()
                         ).collect(Collectors.toSet()))
@@ -168,7 +169,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .id(person.getId())
                 .fullName(person.getFullName())
                 .gender(person.getGender())
-                .birthdate(person.getBirthdate())
+                .birthdate((Data) person.getBirthdate())
                 .idCompany(null) // This can be set to null or mapped if necessary
                 .build();
     }
