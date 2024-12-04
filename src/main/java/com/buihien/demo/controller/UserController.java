@@ -73,7 +73,7 @@ public class UserController {
     public ResponseData<?> getCountry(@PathVariable @Min(value = 1, message = "Id user must be greater than 0") long userId) {
         log.info("Request get user by id={}", userId);
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get user", userService.getUserById(userId));
+            return new ResponseData<>(HttpStatus.OK.value(), "Get user", userService.getUserByIdE(userId));
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {

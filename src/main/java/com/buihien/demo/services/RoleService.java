@@ -8,7 +8,7 @@ import java.util.List;
 public interface RoleService {
     long saveRole(RoleRequest roleRequest);
 
-    long updateRole(long id, RoleRequest roleRequest);
+    void updateRole(long id, RoleRequest roleRequest);
 
     List<RoleResponse> getAllRole();
 

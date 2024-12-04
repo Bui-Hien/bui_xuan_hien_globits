@@ -1,6 +1,7 @@
 package com.buihien.demo.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,10 @@ public class Company {
     private String address;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Person> persons;
 
     @OneToMany(mappedBy = "company")
+    @JsonManagedReference
     private Set<Department> departments = new HashSet<>();
 }

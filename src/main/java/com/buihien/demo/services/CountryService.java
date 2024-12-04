@@ -8,7 +8,7 @@ import java.util.List;
 public interface CountryService {
     long saveCountry(CountryRequest countryRequest);
 
-    long updateCountry(long id, CountryRequest countryRequest);
+    void updateCountry(long id, CountryRequest countryRequest);
 
     List<CountryResponse> getAllCountry();
 

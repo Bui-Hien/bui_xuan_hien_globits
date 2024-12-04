@@ -25,13 +25,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public long updateRole(long id, RoleRequest roleRequest) {
+    public void updateRole(long id, RoleRequest roleRequest) {
         var role = roleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + id));
         role.setRole(roleRequest.getRole());
         role.setDescription(roleRequest.getDescription());
         roleRepository.save(role);
-        return role.getId();
     }
 
     @Override

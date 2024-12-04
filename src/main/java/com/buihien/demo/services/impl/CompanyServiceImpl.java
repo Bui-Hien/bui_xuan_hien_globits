@@ -46,7 +46,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public long updateCompany(long id, CompanyRequest companyRequest) {
+    public void updateCompany(long id, CompanyRequest companyRequest) {
         var company = companyRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + id));
         company.setName(companyRequest.getName());
@@ -66,7 +66,6 @@ public class CompanyServiceImpl implements CompanyService {
         );
 
         companyRepository.save(company);
-        return company.getId();
     }
 
     @Override
@@ -105,6 +104,12 @@ public class CompanyServiceImpl implements CompanyService {
                                         .build())
                         .collect(Collectors.toSet()))
                 .build();
+    }
+
+    @Override
+    public Company getCompanyByIdE(long id) {
+        return companyRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Company not found with id: " + id));
     }
 
 

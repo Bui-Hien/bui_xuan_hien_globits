@@ -71,7 +71,7 @@ public class CompanyController {
     public ResponseData<?> getCountry(@PathVariable @Min(value = 1, message = "Id company must be greater than 0") long companyId) {
         log.info("Request get company by id={}", companyId);
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get company", companyService.getCompanyById(companyId));
+            return new ResponseData<>(HttpStatus.OK.value(), "Get company", companyService.getCompanyByIdE(companyId));
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {

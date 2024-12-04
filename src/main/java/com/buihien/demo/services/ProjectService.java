@@ -3,6 +3,7 @@ package com.buihien.demo.services;
 import com.buihien.demo.dto.request.ProjectRequest;
 import com.buihien.demo.dto.response.ProjectResponse;
 import com.buihien.demo.dto.response.generic.PageResponse;
+import com.buihien.demo.entities.Project;
 
 import java.util.List;
 

@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long updateUser(long id, UserRequest userRequest) {
+    public void updateUser(long id, UserRequest userRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + id));
         user.setPassword(userRequest.getPassword());
@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService {
                 .build());
 
         userRepository.save(user);
-        return user.getId();
     }
 
     @Override
@@ -139,6 +138,12 @@ public class UserServiceImpl implements UserService {
                                         .build()).
                         collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public User getUserByIdE(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + id));
     }
 
     @Override

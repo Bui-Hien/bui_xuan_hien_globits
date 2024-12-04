@@ -1,6 +1,9 @@
 package com.buihien.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,14 +37,21 @@ public class Person {
 
     @Column(name = "address")
     private String address;
+
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
+    @JsonBackReference
     private Company company;
 
     @ManyToMany(mappedBy = "persons")
+    @JsonBackReference
     private Set<Project> projects = new HashSet<>();
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<Task> tasks = new HashSet<>();
 }
