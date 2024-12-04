@@ -53,4 +53,7 @@ public class Person {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Task> tasks = new HashSet<>();
+
+    @Column(name = "avatar")
+    private String avatar;
 }

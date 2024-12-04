@@ -10,14 +10,12 @@ import com.buihien.demo.entities.Role;
 import com.buihien.demo.entities.User;
 import com.buihien.demo.exception.ResourceNotFoundException;
 import com.buihien.demo.repository.UserRepository;
-import com.buihien.demo.services.CompanyService;
-import com.buihien.demo.services.PersonService;
-import com.buihien.demo.services.RoleService;
-import com.buihien.demo.services.UserService;
+import com.buihien.demo.services.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -141,17 +139,24 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Override
-    public User getUserByIdE(long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + id));
-    }
 
     @Override
     public void deleteUserById(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + id));
         userRepository.delete(user);
+    }
+
+    @Override
+    public void updateUserAvatar(long userId, MultipartFile avatar) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with id: " + userId));
+        String urlAvatar = UploadImg.uploadImg(avatar);
+        if (user.getPerson().getAvatar() != null) {
+            UploadImg.deleteFile(user.getPerson().getAvatar());
+        }
+        user.getPerson().setAvatar(urlAvatar);
+        userRepository.save(user);
     }
 
     private User toUserEntity(UserRequest userRequest) {

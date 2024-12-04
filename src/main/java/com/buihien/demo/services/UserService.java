@@ -2,7 +2,7 @@ package com.buihien.demo.services;
 
 import com.buihien.demo.dto.request.UserRequest;
 import com.buihien.demo.dto.response.UserResponse;
-import com.buihien.demo.entities.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,7 +15,8 @@ public interface UserService {
 
     UserResponse getUserById(long id);
 
-    User getUserByIdE(long id);
 
     void deleteUserById(long id);
+
+    void updateUserAvatar(long userId, MultipartFile avatar);
 }

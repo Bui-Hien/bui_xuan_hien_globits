@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -53,6 +54,21 @@ public class UserController {
         }
     }
 
+    @PatchMapping("/{userId}")
+    public ResponseData<?> updateUserAvatar(@PathVariable @Min(1) long userId, MultipartFile avatar) {
+        log.info("Request update user Id={}", userId);
+
+        try {
+            userService.updateUserAvatar(userId, avatar);
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User update success");
+        } catch (ResourceNotFoundException e) {
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        } catch (Exception e) {
+            log.error("errorMessage={}", e.getMessage(), e.getCause());
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Update user fail");
+        }
+    }
+
 
     @DeleteMapping("/{userId}")
     public ResponseData<?> deleteUser(@PathVariable @Min(value = 1, message = "Id user must be greater than 0") long userId) {
@@ -73,7 +89,7 @@ public class UserController {
     public ResponseData<?> getCountry(@PathVariable @Min(value = 1, message = "Id user must be greater than 0") long userId) {
         log.info("Request get user by id={}", userId);
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get user", userService.getUserByIdE(userId));
+            return new ResponseData<>(HttpStatus.OK.value(), "Get user", userService.getUserById(userId));
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {

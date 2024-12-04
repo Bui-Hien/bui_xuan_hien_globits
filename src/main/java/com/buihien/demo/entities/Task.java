@@ -2,7 +2,6 @@ package com.buihien.demo.entities;
 
 import com.buihien.demo.util.Priority;
 import com.buihien.demo.util.Status;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,9 +21,11 @@ public class Task {
     private Long id;
 
     @Column(name = "start_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
 
     @Column(name = "end_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
     @Column(name = "priority")
