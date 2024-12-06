@@ -43,15 +43,14 @@ public class Person {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    @JsonBackReference
     private Company company;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "persons")
-    @JsonBackReference
     private Set<Project> projects = new HashSet<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonIgnore
     private Set<Task> tasks = new HashSet<>();
 
     @Column(name = "avatar")

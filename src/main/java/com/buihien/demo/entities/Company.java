@@ -1,6 +1,7 @@
 package com.buihien.demo.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,9 +27,11 @@ public class Company {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @JsonIgnore
     private Set<Person> persons;
 
     @OneToMany(mappedBy = "company")
     @JsonManagedReference
+    @JsonIgnore
     private Set<Department> departments = new HashSet<>();
 }

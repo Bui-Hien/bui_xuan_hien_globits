@@ -42,11 +42,9 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @JsonManagedReference
     private Project project;
 
     @ManyToOne
     @JoinColumn(name = "person_id")
-    @JsonManagedReference
     private Person person;
 }

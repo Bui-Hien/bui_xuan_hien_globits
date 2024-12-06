@@ -145,40 +145,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public PageResponse<?> getAllTasksWithPageFindField(int pageNo, int pageSize, String taskName, String personName, String companyName, String projectName) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Task> tasks = taskRepository.findAll(pageable);
-
-        // Filter and transform tasks into TaskResponse
-        List<TaskResponse> taskResponses = tasks.stream()
-                .filter(task -> task.getName().equals(taskName)
-                        && task.getPerson().getFullName().equals(personName)
-                        && task.getProject().getName().equals(projectName)
-                        && task.getProject().getCompany().getName().equals(companyName))
-                .map(task -> TaskResponse.builder()
-                        .id(task.getId())
-                        .startTime(task.getStartTime())
-                        .endTime(task.getEndTime())
-                        .priority(String.valueOf(task.getPriority()))
-                        .name(task.getName())
-                        .description(task.getDescription())
-                        .status(String.valueOf(task.getStatus()))
-                        .project(
-                                getBuild(task)
-                        )
-                        .person(getPersonResponse(task)
-                        )
-                        .company(getCompanyResponse(task))
-                        .build())
-                .collect(Collectors.toList());
-
-        // Build and return the paginated response
-        return PageResponse.builder()
-                .pageNo(pageNo)
-                .pageSize(pageSize)
-                .totalPage((int) Math.ceil((double) taskResponses.size() / pageSize))
-                .items(taskResponses)
-                .build();
+    public PageResponse<?> advanceSearch(int pageNo, int pageSize, String taskName, String personName, String companyName, String projectName, String sortBy) {
+        return searchRepository.advanceSearch(pageNo, pageSize, taskName, personName, companyName, projectName, sortBy);
     }
 
     private static CompanyResponse getCompanyResponse(Task task) {
@@ -206,18 +174,6 @@ public class TaskServiceImpl implements TaskService {
                 .build();
     }
 
-
-    @Override
-    public PageResponse<?> advanceSearchByCriteria(int pageNo, int pageSize, String... search) {
-//        return searchRepository.advanceSearch(pageNo, pageSize, search);
-
-        return null;
-    }
-
-    @Override
-    public PageResponse<?> searchTasks(String nameTask, String nameProject, String nameCompany, String namePerson) {
-        return searchRepository.searchTasks(nameTask, nameProject, nameCompany, namePerson);
-    }
 
     @Override
     public ByteArrayInputStream exportAllTasksToExcel() {
@@ -284,4 +240,7 @@ public class TaskServiceImpl implements TaskService {
                 .build();
     }
 
+    public List<Task> findByNamedsfdsaf(String nameTask, String nameProject, String nameCompany, String namePerson) {
+        return taskRepository.findByNamedsfdsaf(nameTask, namePerson, nameProject, nameCompany);
+    }
 }

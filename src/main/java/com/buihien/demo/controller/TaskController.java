@@ -105,17 +105,6 @@ public class TaskController {
         return new ResponseData<>(HttpStatus.OK.value(), "allTaskWithPage", taskService.getAllTasksWithPage(pageNo, pageSize));
     }
 
-    @GetMapping("/getAllTasksWithPageFindField")
-    public ResponseData<?> getAllTasksWithPageFindField(@RequestParam(defaultValue = "0", required = false) int pageNo,
-                                                        @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize,
-                                                        @RequestParam(defaultValue = "", required = false) String taskName,
-                                                        @RequestParam(defaultValue = "", required = false) String personName,
-                                                        @RequestParam(defaultValue = "", required = false) String projectName,
-                                                        @RequestParam(defaultValue = "", required = false) String companyName) {
-        return new ResponseData<>(HttpStatus.OK.value(),
-                "getAllTasksWithPageFindField", taskService.getAllTasksWithPageFindField(pageNo, pageSize, taskName, personName, companyName, projectName
-        ));
-    }
 
     @GetMapping("/allTaskExcel")
     public ResponseEntity<?> getAllTaskExportExcel() {
@@ -141,14 +130,17 @@ public class TaskController {
         }
     }
 
+    @GetMapping("/advanceSearch")
+    public ResponseData<?> advanceSearch(@RequestParam(defaultValue = "0", required = false) int pageNo,
+                                         @Min(1) @RequestParam(defaultValue = "1", required = false) int pageSize,
+                                         @RequestParam(required = false) String taskName,
+                                         @RequestParam(required = false) String personName,
+                                         @RequestParam(required = false) String projectName,
+                                         @RequestParam(required = false) String sortBy,
+                                         @RequestParam(required = false) String companyName) {
 
-    @GetMapping("/advance-search-by-criteria-join")
-    public ResponseData<?> advanceSearchByCriteriaTest(
-            @RequestParam(defaultValue = "", required = false) String taskName,
-            @RequestParam(defaultValue = "", required = false) String personName,
-            @RequestParam(defaultValue = "", required = false) String companyName,
-            @RequestParam(defaultValue = "", required = false) String projectName
-    ) {
-        return new ResponseData<>(HttpStatus.OK.value(), "advance-search-by-criteria join", taskService.searchTasks(taskName, personName, companyName, projectName));
+        log.info("_____________________________controller____________________");
+        return new ResponseData<>(HttpStatus.OK.value(),
+                "advanceSearch", taskService.advanceSearch(pageNo, pageSize, taskName, personName, companyName, projectName, sortBy));
     }
 }

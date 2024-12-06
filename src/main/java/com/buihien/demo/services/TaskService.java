@@ -21,12 +21,8 @@ public interface TaskService {
 
     PageResponse<?> getAllTasksWithPage(int pageNo, int pageSize);
 
-    PageResponse<?> getAllTasksWithPageFindField(int pageNo, int pageSize, String taskName, String personName, String companyName, String projectName);
+    PageResponse<?> advanceSearch(int pageNo, int pageSize, String taskName, String personName, String companyName, String projectName, String sortBy);
 
-
-    PageResponse<?> advanceSearchByCriteria(int pageNo, int pageSize, String... search);
-
-    PageResponse<?> searchTasks(String taskName, String personName, String companyName, String projectName);
 
     ByteArrayInputStream exportAllTasksToExcel();
 
