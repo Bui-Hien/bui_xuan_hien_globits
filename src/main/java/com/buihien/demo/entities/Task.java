@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -21,12 +21,10 @@ public class Task {
     private Long id;
 
     @Column(name = "start_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
+    private LocalDate startTime;
 
     @Column(name = "end_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
+    private LocalDate endTime;
 
     @Column(name = "priority")
     @Enumerated(EnumType.STRING)

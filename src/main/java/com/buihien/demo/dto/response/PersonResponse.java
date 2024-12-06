@@ -2,7 +2,8 @@ package com.buihien.demo.dto.response;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.util.Date;
+
 
 @Getter
 @Setter
@@ -13,6 +14,6 @@ public class PersonResponse {
     private Long id;
     private String fullName;
     private String gender;
-    private Data birthdate;
+    private Date birthdate;
     private Long idCompany;
 }

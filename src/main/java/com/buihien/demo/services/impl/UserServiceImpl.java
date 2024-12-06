@@ -2,18 +2,20 @@ package com.buihien.demo.services.impl;
 
 import com.buihien.demo.dto.request.UserRequest;
 import com.buihien.demo.dto.response.PersonResponse;
+import com.buihien.demo.dto.response.ProjectResponse;
 import com.buihien.demo.dto.response.RoleResponse;
 import com.buihien.demo.dto.response.UserResponse;
-import com.buihien.demo.entities.Company;
-import com.buihien.demo.entities.Person;
-import com.buihien.demo.entities.Role;
-import com.buihien.demo.entities.User;
+import com.buihien.demo.dto.response.generic.PageResponse;
+import com.buihien.demo.entities.*;
 import com.buihien.demo.exception.ResourceNotFoundException;
 import com.buihien.demo.repository.UserRepository;
 import com.buihien.demo.services.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -105,7 +107,7 @@ public class UserServiceImpl implements UserService {
                                 .id(user.getPerson().getId())
                                 .fullName(user.getPerson().getFullName())
                                 .gender(user.getPerson().getGender())
-                                .birthdate((Data) user.getPerson().getBirthdate())
+                                .birthdate(user.getPerson().getBirthdate())
                                 .idCompany(user.getPerson().getCompany().getId())
                                 .build())
                         .build())
@@ -125,7 +127,7 @@ public class UserServiceImpl implements UserService {
                         .id(user.getPerson().getId())
                         .fullName(user.getPerson().getFullName())
                         .gender(user.getPerson().getGender())
-                        .birthdate((Data) user.getPerson().getBirthdate())
+                        .birthdate(user.getPerson().getBirthdate())
                         .idCompany(user.getPerson().getCompany().getId())
                         .build())
                 .roles(user.getRoles()
@@ -158,6 +160,45 @@ public class UserServiceImpl implements UserService {
         user.getPerson().setAvatar(urlAvatar);
         userRepository.save(user);
     }
+
+    @Override
+    public PageResponse<?> getAllUsersWithPage(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<User> users = userRepository.findAll(pageable);
+
+        List<UserResponse> responses = users.stream()
+                .map(user -> UserResponse.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .password(user.getPassword())
+                        .isActive(user.getIsActive())
+                        .person(
+                                user.getPerson() != null ? PersonResponse.builder()
+                                        .id(user.getPerson().getId())
+                                        .fullName(user.getPerson().getFullName())
+                                        .gender(user.getPerson().getGender())
+                                        .birthdate(user.getPerson().getBirthdate())
+                                        .idCompany(user.getPerson().getCompany() != null ? user.getPerson().getCompany().getId() : null)
+                                        .build() : null
+                        )
+                        .roles(user.getRoles() != null ? user.getRoles().stream()
+                                .map(role -> RoleResponse.builder()
+                                        .id(role.getId())
+                                        .role(role.getRole())
+                                        .description(role.getDescription())
+                                        .build())
+                                .collect(Collectors.toList()) : Collections.emptyList())
+                        .build())
+                .collect(Collectors.toList());
+
+        return PageResponse.builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .totalPage(users.getTotalPages())
+                .items(responses)
+                .build();
+    }
+
 
     private User toUserEntity(UserRequest userRequest) {
         return User.builder()

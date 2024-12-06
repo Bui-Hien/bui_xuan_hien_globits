@@ -1,11 +1,9 @@
 package com.buihien.demo.controller;
 
-import com.buihien.demo.dto.request.CountryRequest;
 import com.buihien.demo.dto.request.UserRequest;
 import com.buihien.demo.dto.response.generic.ResponseData;
 import com.buihien.demo.dto.response.generic.ResponseError;
 import com.buihien.demo.exception.ResourceNotFoundException;
-import com.buihien.demo.services.CountryService;
 import com.buihien.demo.services.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -109,5 +107,12 @@ public class UserController {
             log.error("errorMessage={}", e.getMessage(), e.getCause());
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
+    }
+
+    @GetMapping("/allUserWithPage")
+    public ResponseData<?> getAllUsers(@RequestParam(defaultValue = "0", required = false) int pageNo,
+                                       @Min(10) @RequestParam(defaultValue = "10", required = false) int pageSize
+    ) {
+        return new ResponseData<>(HttpStatus.OK.value(), "allUserWithPage", userService.getAllUsersWithPage(pageNo, pageSize));
     }
 }

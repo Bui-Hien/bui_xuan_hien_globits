@@ -145,7 +145,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .id(person.getId())
                 .fullName(person.getFullName())
                 .gender(person.getGender())
-                .birthdate((Data) person.getBirthdate())
+                .birthdate(person.getBirthdate())
                 .build();
     }
 

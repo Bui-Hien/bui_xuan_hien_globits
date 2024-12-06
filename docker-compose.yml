@@ -9,7 +9,9 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-
+      MYSQL_DATABASE: globits
+    volumes:
+      - mysql_data_globis:/var/lib/mysql
   phpmyadmin:
     container_name: phpmyadmin
     image: phpmyadmin:latest
@@ -18,3 +20,7 @@ services:
       - "8888:80"
     environment:
       PMA_ARBITRARY: 1
+
+
+volumes:
+  mysql_data_globis:

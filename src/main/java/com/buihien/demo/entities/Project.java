@@ -31,7 +31,6 @@ public class Project {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
-    @JsonBackReference
     private Company company;
 
     @ManyToMany
@@ -44,6 +43,5 @@ public class Project {
     private Set<Person> persons = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    @JsonBackReference
     private Set<Task> tasks = new HashSet<>();
 }

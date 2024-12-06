@@ -92,7 +92,7 @@ public class CompanyServiceImpl implements CompanyService {
                                 .id(person.getId())
                                 .fullName(person.getFullName())
                                 .gender(person.getGender())
-                                .birthdate((Data) person.getBirthdate())
+                                .birthdate(person.getBirthdate())
                                 .idCompany(null)
                                 .build()
                         ).collect(Collectors.toSet()))
@@ -169,7 +169,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .id(person.getId())
                 .fullName(person.getFullName())
                 .gender(person.getGender())
-                .birthdate((Data) person.getBirthdate())
+                .birthdate(person.getBirthdate())
                 .idCompany(null) // This can be set to null or mapped if necessary
                 .build();
     }

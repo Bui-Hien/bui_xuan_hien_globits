@@ -77,7 +77,7 @@ public class TaskController {
     public ResponseData<?> getTask(@PathVariable @Min(value = 1, message = "Id Task must be greater than 0") long taskId) {
         log.info("Request get Task by id={}", taskId);
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get Task", taskService.getTaskById(taskId));
+            return new ResponseData<>(HttpStatus.OK.value(), "Get Task by id", taskService.getTaskById(taskId));
         } catch (ResourceNotFoundException e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } catch (Exception e) {
@@ -101,9 +101,20 @@ public class TaskController {
 
     @GetMapping("/allTaskWithPage")
     public ResponseData<?> getAllUsers(@RequestParam(defaultValue = "0", required = false) int pageNo,
-                                       @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize
-    ) {
+                                       @Min(10) @RequestParam(defaultValue = "10", required = false) int pageSize) {
         return new ResponseData<>(HttpStatus.OK.value(), "allTaskWithPage", taskService.getAllTasksWithPage(pageNo, pageSize));
+    }
+
+    @GetMapping("/getAllTasksWithPageFindField")
+    public ResponseData<?> getAllTasksWithPageFindField(@RequestParam(defaultValue = "0", required = false) int pageNo,
+                                                        @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize,
+                                                        @RequestParam(defaultValue = "", required = false) String taskName,
+                                                        @RequestParam(defaultValue = "", required = false) String personName,
+                                                        @RequestParam(defaultValue = "", required = false) String projectName,
+                                                        @RequestParam(defaultValue = "", required = false) String companyName) {
+        return new ResponseData<>(HttpStatus.OK.value(),
+                "getAllTasksWithPageFindField", taskService.getAllTasksWithPageFindField(pageNo, pageSize, taskName, personName, companyName, projectName
+        ));
     }
 
     @GetMapping("/allTaskExcel")
@@ -128,5 +139,16 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to export tasks to Excel"));
         }
+    }
+
+
+    @GetMapping("/advance-search-by-criteria-join")
+    public ResponseData<?> advanceSearchByCriteriaTest(
+            @RequestParam(defaultValue = "", required = false) String taskName,
+            @RequestParam(defaultValue = "", required = false) String personName,
+            @RequestParam(defaultValue = "", required = false) String companyName,
+            @RequestParam(defaultValue = "", required = false) String projectName
+    ) {
+        return new ResponseData<>(HttpStatus.OK.value(), "advance-search-by-criteria join", taskService.searchTasks(taskName, personName, companyName, projectName));
     }
 }

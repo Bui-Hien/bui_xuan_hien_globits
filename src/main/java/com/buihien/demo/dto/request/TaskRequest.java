@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,11 +21,11 @@ public class TaskRequest implements Serializable {
 
     @NotNull(message = "Start time is required")
     @FutureOrPresent(message = "Start time must be in the present or future")
-    private Date startTime;
+    private LocalDate startTime;
 
     @NotNull(message = "End time is required")
     @Future(message = "End time must be in the future")
-    private Date endTime;
+    private LocalDate endTime;
 
     @NotBlank(message = "Priority is required")
     @Pattern(regexp = "LOW|MEDIUM|HIGH", message = "Priority must be one of: LOW, MEDIUM, HIGH")
